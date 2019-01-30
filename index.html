@@ -20,6 +20,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item dropdown">
+            <input id="sprintName" type="text" placeholder="Sprint Name">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
               Add Sprint to Project
@@ -57,16 +58,16 @@
         <label for="assignedTo">Assigned to</label>
         <select id="assignedTo">
         </select>
-        <label for="sprint"> on Sprint </label>
-        <select id="sprint">
         </select>
         <label for="project"> for Project </label>
         <select id="project">
         </select>
+        <label for="sprint"> on Sprint </label>
+        <select id="sprint">
       </div>
       <div>
-        <label for="description">Description</label>
-        <textarea id="description" type="text"></textarea>
+        <label for="description"> Description </label>
+        <textarea id="description" type="text" placeholder="Description goes here"></textarea>
         <label for="comment">Comment</label>
         <textarea id="comment" type="text"></textarea>
       </div>
@@ -80,20 +81,50 @@
         <button id="addIssue">Add Issue</button>
       </div>
     </form>
-    <ul class="list-group">
-      <li class="list-group-item">Dapibus ac facilisis in
-        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
-          Small button
-        </button></li>
-      <li class="list-group-item list-group-item-primary">This is a primary list group item</li>
-      <li class="list-group-item list-group-item-secondary">This is a secondary list group item</li>
-      <li class="list-group-item list-group-item-success">This is a success list group item</li>
-      <li class="list-group-item list-group-item-danger">This is a danger list group item</li>
-      <li class="list-group-item list-group-item-warning">This is a warning list group item</li>
-      <li class="list-group-item list-group-item-info">This is a info list group item</li>
-      <li class="list-group-item list-group-item-light">This is a light list group item</li>
-      <li class="list-group-item list-group-item-dark">This is a dark list group item</li>
+    <ul id="issueList" class="list-group">
+
+      <li class="list-group-item"><button id="editBtn" class="btn btn-secondary btn-sm" type="button" data-toggle="modal"
+          data-target="#exampleModalCenter">
+          Edit
+        </button>Select Issue then press Edit button to edit the Issue</li>
+
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Edit Task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div>
+              <p id="editDescription"></p>
+            </div>
+            <div class="modal-body">
+              <label for="editComment">Comment</label><input id="editComment" type="text">
+              <label for="editAssign"></label>Assign to <select id="editAssign"></select>
+            </div>
+            <div>
+              <label for="editStatus">Status</label><select id="editStatus">
+                <option value="New">New</option>
+                <option value="In progress">In progress</option>
+                <option value="Feedback">Feedback</option>
+                <option value="Rework">Rework</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Ready for Testing">Ready for Testing</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </ul>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
