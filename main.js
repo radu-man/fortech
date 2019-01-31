@@ -145,8 +145,8 @@ const updateprojectNames = () => {
 
   //adds the projects to the dropdown menu under 'Add sprint to project...'
   let sprintTo = document.getElementById('dropdown-menu');
-  let last = projects.length - 1;
-  let option = `<a id="p-${last}"class="dropdown-item" href="#">Project Number - ${Object.keys(projects)[last]}</a>`;
+  let index = projects.length - 1;
+  let option = `<a id="p-${index}"class="dropdown-item" href="#">Project Number - ${Object.keys(projects)[index]}</a>`;
   sprintTo.insertAdjacentHTML('beforeend', option);
   sprintTo.lastChild.addEventListener('click', addSprint);
 }
@@ -195,8 +195,8 @@ const addIssue = () => {
   displayIssues(issuesId);
   issuesId++;
   document.getElementById("issueID").value = issuesId;
-  console.log(projects);
 }
+
 //adds issues to list in the DOM
 const displayIssues = (id) => {
 
@@ -261,12 +261,13 @@ const updateIssue = (e) => {
     editSprint.appendChild(el);
   }
 }
-
+//submits the changes from the Modal popup form
 const submitUpdate = () => {
+  //fetches the issue id from the form
   const updateIssueId = parseInt(document.getElementById('issueIdForm').textContent);
 
-
   const new_sprint = editSprint.options[editSprint.selectedIndex].value;
+
   issues[updateIssueId].comment.text = editComment.value;
   issues[updateIssueId].assignee = editAssign.options[editAssign.selectedIndex].value;
   issues[updateIssueId].description = editDescription.value;
@@ -274,8 +275,6 @@ const submitUpdate = () => {
   issues[updateIssueId].status = editStatus.options[editStatus.selectedIndex].value;
   issues[updateIssueId].updatedAt = new Date();
 
-  console.log(projects);
-  console.log(issues);
   const hide = document.getElementById('hide');
   hide.click();
 }
@@ -323,7 +322,6 @@ const saveData = () => {
   } else {
     // No web storage Support.
   }
-
 }
 
 window.onload = () => {
@@ -346,4 +344,53 @@ window.onload = () => {
   // }
 
   updateAll();
+}
+
+//the below are just a rough idea on how I think the functions should work, no time to connect them to the DOM sorry
+
+//loops thru the issues and reads the status and increments statusOverview object values based on that
+const overview = () => {
+
+  const statusOverview = {
+    "New": 0,
+    "In progress": 0,
+    "Feedback": 0,
+    "Rework": 0,
+    "Resolved": 0,
+    "Ready for Testing": 0,
+  };
+
+  for (let i = 0; i < issues.length; i++) {
+    let individualStatus = issues[i].status;
+    statusOverview[individualStatus]++;
+  }
+  return statusOverview;
+}
+
+const addSubtask = (subtask, issue) => {
+  if (issue.type !== "Task") {
+    issue.subtasks.push(subtask);
+  }
+}
+
+//takes an issue and checks it`s subtasks for completion (needs to be used wit a for loop like below)
+const checkReadyForTesting = (issue) => {
+  if (issue.subtasks.length > 0) {
+    var ready = True;
+    for (let i = 0; i < issue.subtask.length; i++) {
+      if (issue.subtasks[i].status !== "Resolved") {
+        ready = False;
+      }
+    }
+  }
+  return ready;
+}
+
+
+const checkAllStatus = () => {
+  for (let i = 0; i < issues.length; i++) {
+    if (checkReadyForTesting(i)) {
+      issues[i].status = "Ready For Testing";
+    }
+  }
 }
