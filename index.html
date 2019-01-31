@@ -11,7 +11,8 @@
 <body>
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <button class="btn btn-primary" id="addProjectBtn">Add Project <span id="projectBadge" class="badge badge-light">0</span></button>
+      <button class="btn btn-primary" id="addProjectBtn" style="margin-right:15px;">Add Project <span id="projectBadge"
+          class="badge badge-light">0</span></button>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -112,7 +113,7 @@
             <label>Issue Nr </label>
             <h5 class="modal-title" id="issueIdForm"></h5><label style="margin:0 1cm;">for Project</label>
             <h5 id="projectForm"></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button id="hide" type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -123,8 +124,10 @@
             <div>
               <label for="editSprint">Sprint</label><select id="editSprint"></select>
             </div>
-            <div>
-              <label for="editAssign"></label>Assign to <select id="editAssign"></select>
+            <div style="display:inline-block; width: 100%;">
+              <label for="currentAssigned">Currently assigne to: </label>
+              <p id="currentAssigned"></p>
+              <label for="editAssign">Assign to </label><select id="editAssign"></select>
             </div>
             <label for="editComment">Comment</label><textarea id="editComment" type="text"></textarea>
 

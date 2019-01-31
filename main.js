@@ -16,7 +16,7 @@ var projects = [];
 var projectId = 0;
 var sprintId = 0;
 
-var users = { '1': 'Radu', '2': 'Alex', '3': 'Maria' };
+var users = { '0': 'Admin' };
 
 var comments = [];
 var commentsId = 0;
@@ -60,7 +60,7 @@ class Issue {
     this.assignee = assignee;
     this.description = description;
     this.status = "New";
-    this.tasks = [];
+    this.subtasks = [];
     this.comment = comment;
     this.updatedAt;
     this.createdAt = new Date();
@@ -125,7 +125,6 @@ const addUser = () => {
     } else {
       users[id] = name;
 
-      let createdBy = document.getElementById('createdBy');
       let el = document.createElement('OPTION');
       el.innerHTML = `${name} - ${id}`;
       createdBy.appendChild(el);
@@ -133,7 +132,6 @@ const addUser = () => {
     }
   }
   finally {
-    let assignedTo = document.getElementById('assignedTo');
     let el = document.createElement('OPTION');
     el.innerHTML = `${name} - ${id}`;
     assignedTo.appendChild(el);
@@ -172,11 +170,8 @@ const addIssue = () => {
 
   const typeVal = type.options[type.selectedIndex].text;
 
-  const created = document.getElementById('createdBy');
-  const createdVal = created.options[created.selectedIndex].text;
-
-  const assign = document.getElementById('assignedTo');
-  const assignVal = assign.options[assign.selectedIndex].text;
+  const createdVal = createdBy.options[createdBy.selectedIndex].text;
+  const assignVal = assignedTo.options[assignedTo.selectedIndex].text;
 
   const sprint = document.getElementById('sprint');
   const sprintVal = sprint.options[sprint.selectedIndex].value;
@@ -195,7 +190,7 @@ const addIssue = () => {
 
   //adds issue to issues list 
   issues.push(new Issue(typeVal, name, sprintVal, createdVal, assignVal, description, commentRef, projectVal));
-  //adds reference from the list to each sprint in the project
+  //adds reference from the list to sprint in the project
   projects[projectVal].sprints[sprintVal].issues.push(issues[issuesId]);
   displayIssues(issuesId);
   issuesId++;
@@ -223,20 +218,21 @@ const displayIssues = (id) => {
   listContainer.appendChild(li);
 }
 
+//populates the Modal popup form to be ready for editing
 const updateIssue = (e) => {
   const id = e.target.id;
-
+  let current = document.getElementById('currentAssigned');
+  console.log(issues[id].assignee);
+  current.innerHTML = issues[id].assignee;
   editComment.value = issues[id].comment.text;
   editDescription.innerText = issues[id].description;
   modalTitle.innerText = issues[id].id;
   projectFormId.innerText = issues[id].project;
 
-
-  const projectID = parseInt(issues[id].project);
-
   while (editAssign.firstChild) {
     editAssign.removeChild(editAssign.firstChild);
   }
+
   for (const [id, name] of Object.entries(users)) {
     const el = document.createElement('OPTION');
     el.innerHTML = `${name} - ${id}`;
@@ -250,13 +246,14 @@ const updateIssue = (e) => {
   const sprint = document.getElementById('editSprint');
 
   for (let i = 0; i < projects.length; i++) {
-
     for (let j = 0; j < projects[i].sprints.length; j++) {
       const el = document.createElement('OPTION');
       el.innerHTML = `${projects[i].sprints[j].id}`;
       sprint.appendChild(el);
     }
   }
+
+  const projectID = parseInt(issues[id].project);
 
   for (let i; i < projects[projectID].sprints.length; i++) {
     const el = document.createElement('OPTION');
@@ -279,9 +276,10 @@ const submitUpdate = () => {
 
   console.log(projects);
   console.log(issues);
-  const message = document.getElementById('msg');
-  message.innerText = 'Updated';
+  const hide = document.getElementById('hide');
+  hide.click();
 }
+
 const clearList = () => {
   while (listContainer.firstChild) {
     listContainer.removeChild(listContainer.firstChild);
@@ -312,6 +310,22 @@ const filterByStatus = () => {
   }
 }
 
+const saveData = () => {
+
+  if (typeof (Storage) !== "undefined") {
+    localStorage.clear();
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('projects', JSON.stringify(projects));
+    localStorage.setItem('projectId', JSON.stringify(projectId));
+    localStorage.setItem('sprintId', JSON.stringify(sprintId));
+    localStorage.setItem('issues', JSON.stringify(issues));
+    localStorage.setItem('issuesId', JSON.stringify(issuesId));
+  } else {
+    // No web storage Support.
+  }
+
+}
+
 window.onload = () => {
   document.getElementById("issueID").value = issuesId;
   document.getElementById('addUser').addEventListener('click', addUser);
@@ -319,5 +333,17 @@ window.onload = () => {
   document.getElementById('addIssue').addEventListener('click', addIssue);
   document.getElementById('filterSprintBtn').addEventListener('click', filterBySprint);
   document.getElementById('filterStatusBtn').addEventListener('click', filterByStatus);
+
+  // if (typeof (Storage) !== "undefined") {
+  //   users = JSON.parse(localStorage.getItem('users'));
+  //   projects = JSON.parse(localStorage.getItem('projects'));
+  //   projectId = JSON.parse(localStorage.getItem('projectId'));
+  //   sprintId = JSON.parse(localStorage.getItem('sprintId'));
+  //   issues = JSON.parse(localStorage.getItem('issues'));
+  //   issuesId = JSON.parse(localStorage.getItem('issuesId'));
+  // } else {
+  //   // No web storage Support.
+  // }
+
   updateAll();
 }
